@@ -1,4 +1,4 @@
-import { Component, effect, inject, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, viewChild } from '@angular/core';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
@@ -36,8 +36,9 @@ export class TodosListComponent {
     })
   }
   
-  async onAddTodo(title:string) {
+  async onAddTodo(title:string, element: HTMLInputElement) {
     await this.store.addTodo(title);
+    element.value = "";
   }
   
   async onDeleteTodo(id: string, event: MouseEvent) {
