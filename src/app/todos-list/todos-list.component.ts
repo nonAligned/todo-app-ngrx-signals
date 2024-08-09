@@ -29,4 +29,10 @@ export class TodosListComponent {
   async onAddTodo(title:string) {
     await this.store.addTodo(title);
   }
+
+  async onDeleteTodo(id: string, event: MouseEvent) {
+    event.stopPropagation();
+
+    await this.store.deleteTodo(id);
+  }
 }
