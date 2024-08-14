@@ -1,13 +1,9 @@
 export class User {
-    id: string;
-    username: string;
+    userName: string;
     email: string;
-    createdAt: Date;
 
     constructor(obj?: any) {
-        this.id = obj && obj.id || null;
-        this.username = obj && obj.username || "";
+        this.userName = obj && obj.userName || "";
         this.email = obj && obj.email || "";
-        this.createdAt = obj && obj.createdAt || Date.now();
     }
 }
