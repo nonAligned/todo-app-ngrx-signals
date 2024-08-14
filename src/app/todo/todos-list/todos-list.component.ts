@@ -4,7 +4,7 @@ import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
-import { TodosFilter, TodosStore } from '../store/todos.store';
+import { TodosFilter, TodosStore } from '../../store/todos.store';
 import { NgStyle } from '@angular/common';
 
 @Component({
