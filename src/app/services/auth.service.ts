@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
@@ -9,10 +9,15 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class AuthService {
   private apiUrl: string = environment.apiUrl;
 
-  constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
+  private http = inject(HttpClient);
+  private jwtHelper = inject(JwtHelperService);
 
   login(username: string, password: string) {
     return this.http.post(this.apiUrl + "account/login", {username, password});
+  }
+
+  logout() {
+    localStorage.removeItem("access_token");
   }
 
   isAuthenticated(): boolean {

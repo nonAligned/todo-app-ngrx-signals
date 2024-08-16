@@ -1,17 +1,16 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { TODOS } from "../model/mock-data";
 import { Todo } from "../model/todo.model";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
-import { map } from "rxjs";
 
 @Injectable({
     providedIn: "root"
 })
 export class TodosService {
     private apiUrl: string = environment.apiUrl;
-
-    constructor(private http: HttpClient) { }
+    
+    private http = inject(HttpClient)
 
     async getTodos() {
         await sleep(1000);
