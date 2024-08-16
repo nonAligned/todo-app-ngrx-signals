@@ -1,7 +1,9 @@
 <div class="app">
-
-  <h1>Todo App</h1>
-
-  <router-outlet></router-outlet>
-
+  <header>
+    <button mat-flat-button (click)="logout()" [disabled]="!checkAuth()">Logout</button>
+  </header>
+  <main>
+    <h1>Todo App</h1>
+    <router-outlet></router-outlet>
+  </main>
 </div>
