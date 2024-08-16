@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,8 @@ import { catchError, merge } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../model/user.model';
 import { Router } from '@angular/router';
+import { UniqueUsernameValidator } from '../../shared/uniqueUsername.validator';
+import { UniqueEmailValidator } from '../../shared/uniqueEmail.validator';
 
 @Component({
   selector: 'register',
@@ -24,15 +26,26 @@ import { Router } from '@angular/router';
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
-  private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private usernameValidator = inject(UniqueUsernameValidator);
+  private emailValidator = inject(UniqueEmailValidator);
 
-  registerForm = this.fb.group({
-    username: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-    email: ["", [Validators.required, Validators.email]],
-    password: ["", [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/), Validators.minLength(8)]]
-  });
+  registerForm = new FormGroup({
+    username: new FormControl("", {
+      validators: [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
+      asyncValidators: [this.usernameValidator.validate.bind(this.usernameValidator)],
+      updateOn: "blur"
+    }),
+    email: new FormControl("", {
+      validators: [Validators.required, Validators.email],
+      asyncValidators: [this.emailValidator.validate.bind(this.emailValidator)],
+      updateOn: "blur"
+    }),
+    password: new FormControl("", {
+      validators: [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/), Validators.minLength(8)]
+    })
+  })
 
   usernameErrorMessage = signal("");
   emailErrorMessage = signal("");
@@ -81,6 +94,9 @@ export class RegisterComponent {
       if (this.registerForm.get("username")?.hasError('maxlength')) {
         this.usernameErrorMessage.set('Username must be maximum 50 characters long');
       }
+      if (this.registerForm.get("username")?.hasError('usernameNotUnique')) {
+        this.usernameErrorMessage.set('Username already exists');
+      }
     } else {
       this.usernameErrorMessage.set('');
     }
@@ -91,6 +107,9 @@ export class RegisterComponent {
       }
       if (this.registerForm.get("email")?.hasError('email')) {
         this.emailErrorMessage.set('Not a valid email');
+      }
+      if (this.registerForm.get("email")?.hasError('emailNotUnique')) {
+        this.emailErrorMessage.set('Email already registered');
       }
     } else {
       this.emailErrorMessage.set('');
