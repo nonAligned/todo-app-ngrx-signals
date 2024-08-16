@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { catchError, debounceTime, merge } from 'rxjs';
+import { catchError, merge } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../model/user.model';
 import { Router, RouterLink } from '@angular/router';
