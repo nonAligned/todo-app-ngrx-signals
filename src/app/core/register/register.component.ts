@@ -5,8 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { merge } from 'rxjs';
+import { catchError, merge } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
+import { User } from '../../model/user.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'register',
@@ -22,13 +24,14 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
-  fb = inject(FormBuilder);
-  authService = inject(AuthService);
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   registerForm = this.fb.group({
     username: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     email: ["", [Validators.required, Validators.email]],
-    password: ["", [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d).+$/), Validators.minLength(8)]]
+    password: ["", [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*\W).+$/), Validators.minLength(8)]]
   });
 
   usernameErrorMessage = signal("");
@@ -48,7 +51,23 @@ export class RegisterComponent {
   }
 
   onSubmit() {
+    let newUser;
 
+    if (this.registerForm.valid) {
+      newUser = new User(this.registerForm.value);
+
+      this.authService.register(newUser).pipe(
+        catchError(error => {
+          throw error
+        })
+      ).subscribe({
+        next: (data: any) => {
+          localStorage.setItem("access_token", data.token);
+          this.router.navigate(['todos']);
+        },
+        error: err => err.error.forEach((error: any) => window.alert(error.description))
+      });
+    }
   }
 
   updateErrorMessage() {
@@ -82,7 +101,7 @@ export class RegisterComponent {
         this.passwordErrorMessage.set('Password is required');
       }
       if (this.registerForm.get("password")?.hasError('pattern')) {
-        this.passwordErrorMessage.set('Password must contain: uppercase letter and number');
+        this.passwordErrorMessage.set('Password must contain: uppercase letter, non-alphanumeric and number');
       }
       if (this.registerForm.get("password")?.hasError('minlength')) {
         this.passwordErrorMessage.set('Password must be minimum 8 characters long');
