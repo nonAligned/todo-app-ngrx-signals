@@ -5,10 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { catchError, merge } from 'rxjs';
+import { catchError, debounceTime, merge } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../model/user.model';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { UniqueUsernameValidator } from '../../shared/uniqueUsername.validator';
 import { UniqueEmailValidator } from '../../shared/uniqueEmail.validator';
 
@@ -20,7 +20,8 @@ import { UniqueEmailValidator } from '../../shared/uniqueEmail.validator';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    RouterLink
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
@@ -53,7 +54,13 @@ export class RegisterComponent {
   hide = signal(true);
 
   constructor() {
-    merge(this.registerForm.statusChanges, this.registerForm.valueChanges)
+    merge(
+      this.registerForm.get('username')?.statusChanges!,
+      this.registerForm.get('email')?.statusChanges!,
+      this.registerForm.get('password')?.statusChanges!,
+      this.registerForm.get('username')?.valueChanges!,
+      this.registerForm.get('email')?.valueChanges!,
+      this.registerForm.get('password')?.valueChanges!)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateErrorMessage());
   }

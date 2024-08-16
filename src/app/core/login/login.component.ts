@@ -7,7 +7,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { catchError, merge } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'login',
@@ -17,24 +17,25 @@ import { Router } from '@angular/router';
     MatInputModule, 
     MatButtonModule, 
     MatIconModule, 
-    ReactiveFormsModule],
+    ReactiveFormsModule,
+    RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
-  hide = signal(true);
-  fb = inject(FormBuilder);
-  authService = inject(AuthService);
-  router = inject(Router);
-
+  private fb = inject(FormBuilder);
+  readonly authService = inject(AuthService);
+  private router = inject(Router);
+  
   loginForm = this.fb.group({
     username: ["", Validators.required],
     password: ["", Validators.required]
   })
-
-  usernameErrorMessage = signal('');
-  passwordErrorMessage = signal('');
+  
+  readonly hide = signal(true);
+  readonly usernameErrorMessage = signal('');
+  readonly passwordErrorMessage = signal('');
 
   showHidePasswordClick(event: MouseEvent) {
     this.hide.set(!this.hide());
@@ -80,9 +81,4 @@ export class LoginComponent {
       this.passwordErrorMessage.set('');
     }
   }
-
-  logout() {
-    this.authService.logout();
-  }
-
 }

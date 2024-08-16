@@ -1,32 +1,29 @@
 <h2>Login</h2>
 
-@if (authService.isAuthenticated()) {
-    <button mat-flat-button (click)="logout()" type="button">Logout</button>
-}
-@else {
-    <form [formGroup]="loginForm">
-        <mat-form-field>
-            <mat-label>Username</mat-label>
-            <input matInput [type]="'text'" formControlName="username" (blur)="updateErrorMessage()" />
-            @if (this.loginForm.get("username")?.invalid) {
-                <mat-error>{{usernameErrorMessage()}}</mat-error>
-            }
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Password</mat-label>
-            <input matInput [type]="hide() ? 'password' : 'text'" formControlName="password" (blur)="updateErrorMessage()" />
-            <button
-                mat-icon-button
-                matSuffix
-                (click)="showHidePasswordClick($event)"
-                [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hide()">
-                <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-            @if (this.loginForm.get("password")?.invalid) {
-                <mat-error>{{passwordErrorMessage()}}</mat-error>
-            }
-        </mat-form-field>
-        <button mat-flat-button (click)="onSubmit()" type="submit" [disabled]="!loginForm.valid">Login</button> 
-    </form>
-}
+<form [formGroup]="loginForm">
+    <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input matInput [type]="'text'" formControlName="username" (blur)="updateErrorMessage()" />
+        @if (this.loginForm.get("username")?.invalid) {
+            <mat-error>{{usernameErrorMessage()}}</mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hide() ? 'password' : 'text'" formControlName="password" (blur)="updateErrorMessage()" />
+        <button
+            mat-icon-button
+            matSuffix
+            (click)="showHidePasswordClick($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide()">
+            <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        @if (this.loginForm.get("password")?.invalid) {
+            <mat-error>{{passwordErrorMessage()}}</mat-error>
+        }
+    </mat-form-field>
+    <button mat-flat-button (click)="onSubmit()" type="submit" [disabled]="!loginForm.valid">Login</button> 
+</form>
+
+<a routerLink="/register">Click to register</a>
