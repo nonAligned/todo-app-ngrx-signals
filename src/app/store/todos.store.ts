@@ -45,12 +45,17 @@ export const TodosStore = signalStore(
 
             },
 
-            async deleteTodo(id: string) {
-                await todosService.deleteTodo(id);
+            deleteTodo(id: string) {
+                todosService.deleteTodo(id).subscribe(data => {
+                    if (data === true) {
+                        patchState(store, (state) => ({
+                            todos: state.todos.filter(todo => todo.id !== id)
+                        }))
+                    } else {
+                        window.alert("There was a problem deleting your todo");
+                    }
+                })
 
-                patchState(store, (state) => ({
-                    todos: state.todos.filter(todo => todo.id !== id)
-                }))
             },
 
             async updateTodo(id: string, completed: boolean) {

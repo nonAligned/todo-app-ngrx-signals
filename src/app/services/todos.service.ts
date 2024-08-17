@@ -43,8 +43,16 @@ export class TodosService {
         );
     }
 
-    async deleteTodo(id:string) {
-        await sleep(500);
+    deleteTodo(id:string): Observable<boolean> {
+        return this.http.delete(this.apiUrl + "todo/" + id).pipe(
+            catchError(err => of(false)),
+            map(data => {
+                if (data === false) {
+                    return false;
+                }
+                return true;
+            })
+        );
     }
 
     async updateTodo(id:string, completed: boolean) {
