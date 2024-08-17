@@ -24,25 +24,25 @@ export const TodosStore = signalStore(
     withMethods(
         (store, todosService = inject(TodosService)) => ({
 
-            async loadAll() {
+            loadAll() {
                 patchState(store, {loading: true});
 
-                const todos = await todosService.getTodos()
-                .then((todos) => {
+                todosService.getTodos().subscribe(todos => {
                     patchState(store, { todos, loading: false });
-                })
-                .catch((error) => {
-                    patchState(store, { loading: false })
                 });
-
             },
 
             async addTodo(title: string) {
-                const todo = await todosService.addTodo({title, completed: false});
+                todosService.addTodo({title, completed: false}).subscribe(todo => {
+                    if(todo.id) {
+                        patchState(store, (state) => ({
+                            todos: [...state.todos, todo]
+                        }))
+                    } else {
+                        window.alert("There was a problem saving your todo in the database");
+                    }
+                })
 
-                patchState(store, (state) => ({
-                    todos: [...state.todos, todo]
-                }))
             },
 
             async deleteTodo(id: string) {

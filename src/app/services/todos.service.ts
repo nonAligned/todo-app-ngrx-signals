@@ -2,7 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { Todo } from "../model/todo.model";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { environment } from "../../environments/environment";
-import { lastValueFrom } from "rxjs";
+import { catchError, concat, lastValueFrom, map, Observable, of, retry, throwError } from "rxjs";
 
 @Injectable({
     providedIn: "root"
@@ -11,7 +11,7 @@ export class TodosService {
     private apiUrl: string = environment.apiUrl;
     private http = inject(HttpClient)
 
-    async getTodos(params?: any) {
+    getTodos(params?: any): Observable<Todo[]> {
         let queryParams = {}
 
         if(params) {
@@ -24,19 +24,23 @@ export class TodosService {
                 .set("PageSize", params.pageSize || 5)
         }
 
-        const response = await lastValueFrom(this.http.get<Todo[]>(this.apiUrl + "todo", queryParams))
-
-        const todos = response.map(todo => new Todo(todo));
-
-        return todos;
+        return this.http.get<Array<Todo>>(this.apiUrl + "todo", queryParams).pipe(
+            catchError(err => of(null)),
+            map(data => {
+                let todos = new Array<Todo>();
+                data?.forEach(elem => todos.push(new Todo(elem)));
+                return todos;
+            })
+        );
     }
 
-    async addTodo(todo:Partial<Todo>) {
-        await sleep(1000);
-        return  {
-            id: Math.random().toString(36).substring(2, 9),
-            ...todo
-        } as Todo;
+    addTodo(todo:Partial<Todo>): Observable<Todo> {
+        return this.http.post(this.apiUrl + "todo", {title: todo.title, isComplete: todo.completed}).pipe(
+            catchError(err => of(null)),
+            map(data => {
+                return new Todo(data);
+            })
+        );
     }
 
     async deleteTodo(id:string) {
