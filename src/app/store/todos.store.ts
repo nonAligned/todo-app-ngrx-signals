@@ -58,12 +58,16 @@ export const TodosStore = signalStore(
 
             },
 
-            async updateTodo(id: string, completed: boolean) {
-                await todosService.updateTodo(id, completed);
-
-                patchState(store, (state) => ({
-                    todos: state.todos.map(todo => todo.id === id ? {...todo, completed} : todo)
-                }))
+            updateTodo(id: string, completed: boolean) {
+                todosService.updateTodo(id, completed, store.todos().filter(todo => todo.id === id)[0].title).subscribe(todo => {
+                    if (todo.id) {
+                        patchState(store, (state) => ({
+                            todos: state.todos.map(todo => todo.id === id ? {...todo, completed} : todo)
+                        }));
+                    } else {
+                        window.alert("There was a problem updating your todo");
+                    }
+                });
             },
 
             updateFilter(filter: TodosFilter) {

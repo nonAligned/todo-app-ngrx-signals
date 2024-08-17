@@ -55,8 +55,13 @@ export class TodosService {
         );
     }
 
-    async updateTodo(id:string, completed: boolean) {
-        await sleep(500);
+    updateTodo(id:string, completed: boolean, title: string): Observable<Todo> {
+        return this.http.put(this.apiUrl + "todo/" + id, {title: title, isComplete: completed}).pipe(
+            catchError(err => of(null)),
+            map(data => {
+                return new Todo(data);
+            })
+        );
     }
 }
 
