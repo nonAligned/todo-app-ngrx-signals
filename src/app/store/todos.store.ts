@@ -46,8 +46,8 @@ export const TodosStore = signalStore(
             },
 
             deleteTodo(id: string) {
-                todosService.deleteTodo(id).subscribe(data => {
-                    if (data === true) {
+                todosService.deleteTodo(id).subscribe(success => {
+                    if (success === true) {
                         patchState(store, (state) => ({
                             todos: state.todos.filter(todo => todo.id !== id)
                         }))
