@@ -2,7 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { Todo } from "../model/todo.model";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { environment } from "../../environments/environment";
-import { catchError, concat, lastValueFrom, map, Observable, of, retry, throwError } from "rxjs";
+import { catchError, map, Observable, of } from "rxjs";
 
 @Injectable({
     providedIn: "root"
@@ -14,21 +14,18 @@ export class TodosService {
     getTodos(params?: any): Observable<Todo[]> {
         let queryParams = {}
 
+
         if(params) {
-            queryParams = new HttpParams()
-                .set("Title", params.title || "")
-                .set("IsComplete", params.isComplete || false)
-                .set("SortBy", params.sortBy || "")
-                .set("IsDescending", params.isDescending || true)
-                .set("PageNumber", params.pageNumber || 1)
-                .set("PageSize", params.pageSize || 5)
+            queryParams = new HttpParams({fromObject: params});
         }
 
-        return this.http.get<Array<Todo>>(this.apiUrl + "todo", queryParams).pipe(
+        return this.http.get<Array<Todo>>(this.apiUrl + "todo", {params: queryParams}).pipe(
             catchError(err => of(null)),
             map(data => {
                 let todos = new Array<Todo>();
-                data?.forEach(elem => todos.push(new Todo(elem)));
+                if (data) {
+                    data?.forEach(elem => todos.push(new Todo(elem)));
+                }
                 return todos;
             })
         );

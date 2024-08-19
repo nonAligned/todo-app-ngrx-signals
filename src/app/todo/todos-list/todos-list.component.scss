@@ -8,12 +8,19 @@
     width: 100%;
 }
 
-.todo-item {
-    display: flex;
-    align-items: center;
+.todos-list {
+    padding: 1rem 0;
 }
 
-.delete-todo {
-    margin-right: 10px;
-    cursor: pointer;
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.todo-item-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }

@@ -15,11 +15,11 @@ export class TodosComponent implements OnInit {
   store = inject(TodosStore);
 
   ngOnInit(): void {
-    this.loadTodos().then(() => console.log("Todos Loaded!"));
+    this.loadTodos();
   }
 
-  async loadTodos() {
-    await this.store.loadAll();
+  loadTodos() {
+    this.store.loadAll();
   }
 
 }
