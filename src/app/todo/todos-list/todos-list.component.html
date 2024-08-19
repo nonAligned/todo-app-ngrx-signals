@@ -4,11 +4,21 @@
     <mat-icon matSuffix>edit</mat-icon>
 </mat-form-field>
 
-<mat-button-toggle-group #filter (change)="onFilterTodos($event)">
-    <mat-button-toggle value="all">All</mat-button-toggle>
-    <mat-button-toggle value="pending">Pending</mat-button-toggle>
-    <mat-button-toggle value="completed">Completed</mat-button-toggle>
-</mat-button-toggle-group>
+<div class="todo-query-group">
+    <mat-button-toggle-group #filter (change)="onFilterTodos($event)">
+        <mat-button-toggle value="all">All</mat-button-toggle>
+        <mat-button-toggle value="pending">Pending</mat-button-toggle>
+        <mat-button-toggle value="completed">Completed</mat-button-toggle>
+    </mat-button-toggle-group>
+    
+    <mat-form-field>
+        <mat-select (selectionChange)="onSortChange($event.value)" #sort>
+            <mat-option [value]="true">Newest first</mat-option>
+            <mat-option [value]="false">Oldest first</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+
 
 <div class="todos-list">
     @for (todo of store.filteredTodos(); track todo.id; let index = $index) {

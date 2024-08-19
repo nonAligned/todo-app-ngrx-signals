@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, viewChild } from '@angular/core';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatFormFieldModule, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup, MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatListModule, MatListOption, MatSelectionList } from '@angular/material/list';
 import { TodosStore } from '../../store/todos.store';
@@ -10,16 +10,16 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { Todo } from '../../model/todo.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'todos-list',
   standalone: true,
   imports: [
-    MatFormField, 
-    MatLabel, 
-    MatInput, 
-    MatIcon,
-    MatSuffix,
+    MatFormFieldModule, 
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
     MatListModule,
     MatButtonModule,
     MatCheckboxModule,
@@ -34,14 +34,18 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class TodosListComponent {
   store = inject(TodosStore);
   filter = viewChild.required(MatButtonToggleGroup);
+  sort = viewChild.required(MatSelect);
   paginator = viewChild.required(MatPaginator);
   pageEvent?: PageEvent;
 
   constructor() {
     effect(() => {
       const filter = this.filter();
+      const sort = this.sort();
       const paginator = this.paginator();
+
       filter.value = this.store.filter();
+      sort.value = this.store.params().IsDescending;
       paginator.length = this.store.todosLength();
       paginator.pageSize = this.store.pageSize();
       paginator.pageIndex = this.store.page()-1;
@@ -70,5 +74,9 @@ export class TodosListComponent {
 
   onFilterTodos(event: MatButtonToggleChange) {
     this.store.updateFilter(event.value);
+  }
+
+  onSortChange(descending: boolean) {
+    this.store.updateSort(descending);
   }
 }

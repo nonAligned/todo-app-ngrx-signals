@@ -113,6 +113,17 @@ export const TodosStore = signalStore(
 
             updatePage(newPage: PageEvent) {
                 patchState(store, {page: newPage.pageIndex+1, pageSize: newPage.pageSize});
+            },
+
+            updateSort(isDescending: boolean) {
+                let newParams = store.params();
+                newParams.IsDescending = isDescending;
+
+                patchState(store, {params: newParams});
+
+                todosService.getTodos(store.params()).subscribe(todos => {
+                    patchState(store, { todos });
+                });
             }
             
         })
