@@ -14,7 +14,7 @@
     @for (todo of store.filteredTodos(); track todo.id; let index = $index) {
         <div class="todo-item">
             <div class="todo-item-group">
-                <button mat-icon-button aria-label="Delete todo button" (click)="onDeleteTodo(todo.id, $event)">
+                <button mat-mini-fab aria-label="Delete todo button" (click)="onDeleteTodo(todo.id, $event)">
                     <mat-icon>delete</mat-icon>
                 </button>
                 <span [ngStyle]="{'text-decoration': todo.completed ? 'line-through' : 'none'}">

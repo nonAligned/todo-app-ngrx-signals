@@ -10,17 +10,20 @@
 
 .todos-list {
     padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
 .todo-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 1rem;
 }
 
 .todo-item-group {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 2rem;
 }
