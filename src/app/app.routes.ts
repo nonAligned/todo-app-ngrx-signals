@@ -4,10 +4,12 @@ import { TodosComponent } from './todo/todos/todos.component';
 import { authGuard } from './shared/auth.guard';
 import { RegisterComponent } from './core/register/register.component';
 import { logGuard } from './shared/log.guard';
+import { NotFoundComponent } from './core/not-found/not-found.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [logGuard] },
     { path: 'register', component: RegisterComponent, canActivate: [logGuard] },
     { path: 'todos', component: TodosComponent, canActivate: [authGuard] },
-    { path: "", redirectTo: "todos", pathMatch: "full"}
+    { path: "", redirectTo: "todos", pathMatch: "full" },
+    { path: "**", component: NotFoundComponent }
 ];
