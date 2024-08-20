@@ -22,7 +22,7 @@ export const appConfig: ApplicationConfig = {
       JwtModule.forRoot({
         config: {
           tokenGetter: tokenGetter,
-          allowedDomains:["localhost:5056"]
+          allowedDomains:["localhost:5056", "todoappapi-b4gvbvc5gre4aafv.eastus-01.azurewebsites.net"]
         }
       })
     )
