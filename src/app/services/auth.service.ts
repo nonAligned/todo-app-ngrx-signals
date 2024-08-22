@@ -10,7 +10,6 @@ import { catchError } from 'rxjs';
 })
 export class AuthService {
   private apiUrl: string = environment.apiUrl;
-
   private http = inject(HttpClient);
   private jwtHelper = inject(JwtHelperService);
 

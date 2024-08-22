@@ -8,6 +8,7 @@ import { catchError, merge } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'login',
@@ -16,7 +17,8 @@ import { Router, RouterLink } from '@angular/router';
     MatFormFieldModule, 
     MatInputModule, 
     MatButtonModule, 
-    MatIconModule, 
+    MatIconModule,
+    MatProgressSpinner, 
     ReactiveFormsModule,
     RouterLink],
   templateUrl: './login.component.html',
@@ -27,6 +29,7 @@ export class LoginComponent {
   private fb = inject(FormBuilder);
   readonly authService = inject(AuthService);
   private router = inject(Router);
+  readonly isDataLoading = signal(false);
   
   loginForm = this.fb.group({
     username: ["", Validators.required],
@@ -51,6 +54,7 @@ export class LoginComponent {
 
   onSubmit() {
     if(this.loginForm.valid) {
+      this.isDataLoading.set(true);
       let username = this.loginForm.get("username")?.value;
       let password = this.loginForm.get("password")?.value;
 
@@ -61,9 +65,13 @@ export class LoginComponent {
       ).subscribe({
         next: (data: any) => {
           localStorage.setItem("access_token", data.token)
+          this.isDataLoading.set(false);
           this.router.navigate(['todos']);
         },
-        error: err => window.alert(err.error)
+        error: err => {
+          this.isDataLoading.set(false);
+          window.alert(err.error);
+        }
       });
     }
   }

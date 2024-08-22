@@ -1,38 +1,43 @@
 <h2>Register</h2>
 
-<form [formGroup]="registerForm">
-    <mat-form-field>
-        <mat-label>Username</mat-label>
-        <input matInput [type]="'text'" formControlName="username" (blur)="updateErrorMessage()"/>
-        @if (this.registerForm.get("username")?.invalid) {
-            <mat-error>{{usernameErrorMessage()}}</mat-error>
-        }
-    </mat-form-field>
-
-    <mat-form-field>
-        <mat-label>Email</mat-label>
-        <input matInput [type]="'email'" formControlName="email"  (blur)="updateErrorMessage()"/>
-        @if (this.registerForm.get("email")?.invalid) {
-            <mat-error>{{emailErrorMessage()}}</mat-error>
-        }
-    </mat-form-field>
-
-    <mat-form-field>
-        <mat-label>Password</mat-label>
-        <input matInput [type]="hide() ? 'password' : 'text'" formControlName="password" (blur)="updateErrorMessage()" />
-        <button
-            mat-icon-button
-            matSuffix
-            (click)="showHidePasswordClick($event)"
-            [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="hide()">
-            <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-        @if (this.registerForm.get("password")?.invalid) {
-            <mat-error>{{passwordErrorMessage()}}</mat-error>
-        }
-    </mat-form-field>
-    <button mat-flat-button type="submit" (click)="onSubmit()" [disabled]="!registerForm.valid">Register</button>
-</form>
-
-<a routerLink="/login">Click to login</a>
+@if (this.isDataLoading()) {
+    <mat-spinner />
+}
+@else {
+    <form [formGroup]="registerForm">
+        <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput [type]="'text'" formControlName="username" (blur)="updateErrorMessage()"/>
+            @if (this.registerForm.get("username")?.invalid) {
+                <mat-error>{{usernameErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+    
+        <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput [type]="'email'" formControlName="email"  (blur)="updateErrorMessage()"/>
+            @if (this.registerForm.get("email")?.invalid) {
+                <mat-error>{{emailErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+    
+        <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput [type]="hide() ? 'password' : 'text'" formControlName="password" (blur)="updateErrorMessage()" />
+            <button
+                mat-icon-button
+                matSuffix
+                (click)="showHidePasswordClick($event)"
+                [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide()">
+                <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            @if (this.registerForm.get("password")?.invalid) {
+                <mat-error>{{passwordErrorMessage()}}</mat-error>
+            }
+        </mat-form-field>
+        <button mat-flat-button type="submit" (click)="onSubmit()" [disabled]="!registerForm.valid">Register</button>
+    </form>
+    
+    <a routerLink="/login">Click to login</a>
+}

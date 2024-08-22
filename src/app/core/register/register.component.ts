@@ -11,6 +11,7 @@ import { User } from '../../model/user.model';
 import { Router, RouterLink } from '@angular/router';
 import { UniqueUsernameValidator } from '../../shared/uniqueUsername.validator';
 import { UniqueEmailValidator } from '../../shared/uniqueEmail.validator';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'register',
@@ -21,6 +22,7 @@ import { UniqueEmailValidator } from '../../shared/uniqueEmail.validator';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinner,
     RouterLink
   ],
   templateUrl: './register.component.html',
@@ -52,6 +54,7 @@ export class RegisterComponent {
   emailErrorMessage = signal("");
   passwordErrorMessage = signal("");
   hide = signal(true);
+  readonly isDataLoading = signal(false);
 
   constructor() {
     merge(
@@ -74,6 +77,7 @@ export class RegisterComponent {
     let newUser;
 
     if (this.registerForm.valid) {
+      this.isDataLoading.set(true);
       newUser = new User(this.registerForm.value);
 
       this.authService.register(newUser).pipe(
@@ -82,10 +86,14 @@ export class RegisterComponent {
         })
       ).subscribe({
         next: (data: any) => {
+          this.isDataLoading.set(false);
           localStorage.setItem("access_token", data.token);
           this.router.navigate(['todos']);
         },
-        error: err => err.error.forEach((error: any) => window.alert(error.description))
+        error: err => {
+          this.isDataLoading.set(false);
+          err.error.forEach((error: any) => window.alert(error.description))
+        }
       });
     }
   }
