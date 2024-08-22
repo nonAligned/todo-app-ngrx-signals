@@ -1,9 +1,10 @@
 <div class="app">
   <header>
+    <img class="logo" src="../assets/logo.png" alt="Todo App logo">
     <button mat-flat-button (click)="logout()" [disabled]="!checkAuth()">Logout</button>
   </header>
   <main>
-    <h1>Todo App</h1>
+
     <router-outlet></router-outlet>
   </main>
 </div>
