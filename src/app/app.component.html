@@ -1,10 +1,22 @@
-<div class="app">
-  <header>
-    <img class="logo" src="../assets/logo.png" alt="Todo App logo">
-    <button mat-flat-button (click)="logout()" [disabled]="!checkAuth()">Logout</button>
-  </header>
-  <main>
-
-    <router-outlet></router-outlet>
-  </main>
-</div>
+<mat-sidenav-container hasBackdrop="true">
+  <mat-sidenav #sidenav position="end" mode="side" fixedInViewport="true">
+    <div id="sidenav-content">
+      <div id="sidenav-content-top">
+        <button id="menu-btn-close" mat-icon-button aria-label="Close menu button" (click)="sidenav.toggle()"><mat-icon>close</mat-icon></button>
+        <button mat-flat-button (click)="logout()" [disabled]="!checkAuth()">Logout</button>
+      </div>
+      <p>Say hi on <a class="menu-link" href="https://github.com/nonAligned" target="_blank">GitHub</a></p>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="app">
+      <header>
+        <img class="logo" src="../assets/logo.png" alt="Todo App logo">
+        <button id="menu-btn" mat-icon-button aria-label="Open menu button" (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+      </header>
+      <main>
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
