@@ -12,6 +12,7 @@ import { Router, RouterLink } from '@angular/router';
 import { UniqueUsernameValidator } from '../../shared/uniqueUsername.validator';
 import { UniqueEmailValidator } from '../../shared/uniqueEmail.validator';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { getErrorMessage } from '../../shared/error-handler';
 
 @Component({
   selector: 'register',
@@ -92,7 +93,7 @@ export class RegisterComponent {
         },
         error: err => {
           this.isDataLoading.set(false);
-          err.error.forEach((error: any) => window.alert(error.description))
+          window.alert(getErrorMessage(err));
         }
       });
     }

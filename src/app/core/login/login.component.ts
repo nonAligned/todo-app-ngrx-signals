@@ -9,6 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { getErrorMessage } from '../../shared/error-handler';
 
 @Component({
   selector: 'login',
@@ -70,7 +71,7 @@ export class LoginComponent {
         },
         error: err => {
           this.isDataLoading.set(false);
-          window.alert(err.error);
+          window.alert(getErrorMessage(err));
         }
       });
     }
